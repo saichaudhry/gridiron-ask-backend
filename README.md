@@ -177,7 +177,10 @@ gitignored, and load it with `set -a; source .env; set +a`.
 1. Render dashboard, **New**, **Blueprint**, pick this repo.
 2. When prompted, paste the Claude key into `ANTHROPIC_API_KEY`.
 3. Deploy. Render runs `pip install -r requirements.txt` and starts
-   `gunicorn app:app`. `/health` is the health check.
+   `gunicorn app:app` with one worker and four threads, so the snapshot cache
+   and the rate limiter are shared by every request. `/health` is the health
+   check. If Render rejects `healthCheckPath` on the free plan, delete that
+   line from `render.yaml`.
 
 If Render assigns a URL other than `https://gridiron-ask.onrender.com`,
 update `DEFAULT_API` in the frontend's `js/ask.js`.
